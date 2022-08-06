@@ -86,6 +86,9 @@ _prebuild_common() {
 
 _build() {
 	if [ "$_NOLIB64" != "true" ]; then
+    if [ "$_nomakepkg_dep_resolution_distro" = "debuntu" ] && [ "$_NOLIB64" != "true" ]; then # Install 64-bit deps back after 32-bit wine is built
+      _debuntu_64
+    fi
 	  # build wine 64-bit
 	  # (according to the wine wiki, this 64-bit/32-bit building order is mandatory)
 	  if [ "$_NOCCACHE" != "true" ]; then
@@ -114,14 +117,14 @@ _build() {
 	  if [ "$_LOCAL_OPTIMIZED" = 'true' ]; then
 	    # make using all available threads
 	    if [ "$_log_errors_to_file" = "true" ]; then
-	      make -j$(nproc) 2> "$_where/debug.log"
+	      make -j$nproc 2> "$_where/debug.log"
 	    else
-	      _buildtime64=$( time ( schedtool -B -n 1 -e ionice -n 1 make -j$(nproc) 2>&1 ) 3>&1 1>&2 2>&3 ) || _buildtime64=$( time ( make -j$(nproc) 2>&1 ) 3>&1 1>&2 2>&3 )
+	      _buildtime64=$( time ( schedtool -B -n 1 -e ionice -n 1 make -j$nproc 2>&1 ) 3>&1 1>&2 2>&3 ) || _buildtime64=$( time ( make -j$nproc 2>&1 ) 3>&1 1>&2 2>&3 )
 	    fi
 	  else
 	    # make using makepkg settings
 	    if [ "$_log_errors_to_file" = "true" ]; then
-	      make -j$(nproc) 2> "$_where/debug.log"
+	      make -j$nproc 2> "$_where/debug.log"
 	    else
 	      _buildtime64=$( time ( schedtool -B -n 1 -e ionice -n 1 make 2>&1 ) 3>&1 1>&2 2>&3 ) || _buildtime64=$( time ( make 2>&1 ) 3>&1 1>&2 2>&3 )
 	    fi
@@ -175,14 +178,14 @@ _build() {
 	  if [ "$_LOCAL_OPTIMIZED" = 'true' ]; then
 	    # make using all available threads
 	    if [ "$_log_errors_to_file" = "true" ]; then
-	      make -j$(nproc) 2> "$_where/debug.log"
+	      make -j$nproc 2> "$_where/debug.log"
 	    else
-	      _buildtime32=$( time ( schedtool -B -n 1 -e ionice -n 1 make -j$(nproc) 2>&1 ) 3>&1 1>&2 2>&3 ) || _buildtime32=$( time ( make -j$(nproc) 2>&1 ) 3>&1 1>&2 2>&3 )
+	      _buildtime32=$( time ( schedtool -B -n 1 -e ionice -n 1 make -j$nproc 2>&1 ) 3>&1 1>&2 2>&3 ) || _buildtime32=$( time ( make -j$nproc 2>&1 ) 3>&1 1>&2 2>&3 )
 	    fi
 	  else
 	    # make using makepkg settings
 	    if [ "$_log_errors_to_file" = "true" ]; then
-	      make -j$(nproc) 2> "$_where/debug.log"
+	      make -j$nproc 2> "$_where/debug.log"
 	    else
 	      _buildtime32=$( time ( schedtool -B -n 1 -e ionice -n 1 make 2>&1 ) 3>&1 1>&2 2>&3 ) || _buildtime32=$( time ( make 2>&1 ) 3>&1 1>&2 2>&3 )
 	    fi

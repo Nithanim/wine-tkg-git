@@ -1,24 +1,25 @@
-name: Wine Ubuntu CI
+name: Wine Ubuntu
 
 on:
-  schedule:
-    - cron:  '25 9,21 * * *'
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
 
       - uses: actions/checkout@v2
       - name: Compilation
         run: |
+          export nproc=1
           sudo dpkg --add-architecture i386 && sudo apt update
           sudo apt install aptitude
           sudo aptitude remove -y '?narrow(?installed,?version(deb.sury.org))'
           cd wine-tkg-git 
           sed -i 's/distro=""/distro="debuntu"/' customization.cfg
+          sed -i 's/_nomakepkg_dep_resolution_distro=""/_nomakepkg_dep_resolution_distro="debuntu"/' customization.cfg
+          sed -i 's/_nomakepkg_midbuild_prompt=""/distro="false"/' customization.cfg
           touch tarplz
           yes|./non-makepkg-build.sh
       - name: Archive the artifacts
