@@ -85,10 +85,13 @@ _prebuild_common() {
 }
 
 _build() {
+  echo "NITHANIM: Called build"
 	if [ "$_NOLIB64" != "true" ]; then
+	  echo "NITHANIM: Called build64"
     if [ "$_nomakepkg_dep_resolution_distro" = "debuntu" ] && [ "$_NOLIB64" != "true" ]; then # Install 64-bit deps back after 32-bit wine is built
       _debuntu_64
     fi
+    echo "NITHANIM: end install libs"
 	  # build wine 64-bit
 	  # (according to the wine wiki, this 64-bit/32-bit building order is mandatory)
 	  if [ "$_NOCCACHE" != "true" ]; then
